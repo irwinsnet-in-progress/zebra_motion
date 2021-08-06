@@ -2,6 +2,9 @@
 # Authorization keys are kept in a file named auth.py
 **/auth.py
 
+# Other ignored files
+**/.vscode
+
 ### === Default Ignore settings from
 ### === https://github.com/github/gitignore/blob/master/Python.gitignore
 # Byte-compiled / optimized / DLL files
