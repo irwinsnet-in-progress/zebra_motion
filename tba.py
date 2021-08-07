@@ -1,3 +1,21 @@
+"""Functions to downloads FRC data from The Blue Alliance (TBA) API.
+
+The functions require a TBA API authorization key, which can
+be obtained by creating an account on https://www.thebluealliance.com.
+Save the authorization key in a file called auth.py, which should be
+importable as auth. For example:
+```python
+# Contents of auth.py
+tba_key = 'thisisafakeblueallianceapikey'
+```
+
+The TBA API returns information as a JSON string. These functions use
+the Python Standard Library's JSON module to convert the string to
+a Python dictionary or list, depending on the structure of the JSON text.
+
+Stacy Irwin, 7 Aug 2021
+"""
+
 import json
 import urllib.request
 
@@ -8,6 +26,8 @@ import auth
 BASE_URL = 'https://www.thebluealliance.com/api/v3'
 
 def _send_request(path):
+    """Sends HTTP request to The Blue Alliance Read API (V3).
+    """
     full_url = BASE_URL + path
     http_headers = {
         'X-TBA-Auth-Key': auth.tba_key,
@@ -20,11 +40,14 @@ def _send_request(path):
             json_response = json.loads(resp.read())
     return json_response
 
+
 def get_status():
+    """Returns status of TBA Read API."""
     return _send_request('/status')
 
 
 def get_districts(year, df=False):
+    """Gets list of FRC Districts."""
     districts = _send_request(f'/districts/{year}')
     if df:
         districts = pd.DataFrame(districts)
@@ -32,6 +55,7 @@ def get_districts(year, df=False):
 
 
 def get_events_by_district(district_key, option='full', df=False):
+    """Gets event data for a given district and year."""
     options = {'full': '/events',
                'simple': '/events/simple',
                'keys': '/events/keys'}
@@ -45,6 +69,7 @@ def get_events_by_district(district_key, option='full', df=False):
 
 
 def get_events_by_year(year, option='full', df=False):
+    """Gets all FRC events for a given year."""
     options = {'full': '',
                'simple': '/simple',
                'keys': '/keys'}
@@ -58,12 +83,19 @@ def get_events_by_year(year, option='full', df=False):
 
 
 def get_match_keys(event_key):
+    """Gets all match keys for a given event."""
     matches = _send_request(f'/event/{event_key}/matches/keys')
     return matches
 
 
 def get_zebra(match_key):
+    """Gets Zebra position tracking data for a given match."""
     zebra = _send_request(f'/match/{match_key}/zebra_motionworks')
     return zebra
+
+def get_match_scores(match_key):
+    """Gets detailed scores for a given match."""
+    match = _send_request(f'/match/{match_key}')
+    return match
 
         

@@ -18,17 +18,19 @@ def match_path_data(year):
         for match_key in match_keys:
             try:
                 zdata = tba.get_zebra(match_key)
+                score_data = tba.get_match_scores(match_key)
             except urllib.error.HTTPError:
-                yield event_key, match_key, None
+                yield event_key, match_key, None, None,
                 break
-            yield event_key, match_key, zdata
+            yield event_key, match_key, zdata, score_data
 
 
 def path_data(year):
     with open('zebra.jsonl', 'wt') as zfile:
-        for event_key, match_key, zdata in match_path_data(year):
+        for event_key, match_key, zdata, score_data in match_path_data(year):
             match_data = {'event': event_key,
                           'match': match_key,
-                          'zebra': zdata}
+                          'zebra': zdata,
+                          'score': score_data}
             zfile.write(json.dumps(match_data) + '\n')
 
