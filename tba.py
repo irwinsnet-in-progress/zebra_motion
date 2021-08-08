@@ -54,32 +54,53 @@ def get_districts(year, df=False):
     return districts
 
 
-def get_events_by_district(district_key, option='full', df=False):
-    """Gets event data for a given district and year."""
-    options = {'full': '/events',
-               'simple': '/events/simple',
-               'keys': '/events/keys'}
-    if option.lower() not in options.keys():
-        err_msg = "Data arg must be one of ['full', 'simple', 'keys']"
-        raise ValueError(err_msg)
-    events = _send_request(f'/district/{district_key}{options[option]}')
-    if df:
-        events = pd.DataFrame(events)
-    return events
+# def get_events_by_district(district_key, option='full', df=False):
+#     """Gets event data for a given district and year."""
+#     options = {'full': '/events',
+#                'simple': '/events/simple',
+#                'keys': '/events/keys'}
+#     if option.lower() not in options.keys():
+#         err_msg = "Data arg must be one of ['full', 'simple', 'keys']"
+#         raise ValueError(err_msg)
+#     events = _send_request(f'/district/{district_key}{options[option]}')
+#     if df:
+#         events = pd.DataFrame(events)
+#     return events
 
 
-def get_events_by_year(year, option='full', df=False):
-    """Gets all FRC events for a given year."""
-    options = {'full': '',
+# def get_events_by_year(year, option='full', df=False):
+#     """Gets all FRC events for a given year."""
+#     options = {'full': '',
+#                'simple': '/simple',
+#                'keys': '/keys'}
+#     if option.lower() not in options.keys():
+#         err_msg = "Data arg must be one of ['full', 'simple', 'keys']"
+#         raise ValueError(err_msg)
+#     events = _send_request(f'/events/{year}{options[option]}')
+#     if df:
+#         events = pd.DataFrame(events)
+#     return events
+
+def get_events(key, option='full', df=False):
+    """Gets all FRC events for a given year or district."""
+    options = {'full':   '',
                'simple': '/simple',
-               'keys': '/keys'}
+               'keys':   '/keys'}
     if option.lower() not in options.keys():
         err_msg = "Data arg must be one of ['full', 'simple', 'keys']"
         raise ValueError(err_msg)
-    events = _send_request(f'/events/{year}{options[option]}')
+    if str(key).isnumeric():
+        events = _send_request(f'/events/{key}{options[option]}')
+    else:
+        options = {'full':   '/events',
+                   'simple': '/events/simple',
+                   'keys':   '/events/keys'}
+        events = _send_request(f'/district/{key}{options[option]}')
     if df:
         events = pd.DataFrame(events)
     return events
+
+
 
 
 def get_match_keys(event_key):
