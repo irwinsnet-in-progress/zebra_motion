@@ -1,6 +1,7 @@
 
 # Authorization keys are kept in a file named auth.py
 **/auth.py
+*.jsonl
 
 # Other ignored files
 **/.vscode
