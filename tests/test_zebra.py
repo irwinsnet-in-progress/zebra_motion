@@ -2,7 +2,7 @@
 import zebra
 
 
-DATA_FILE = r'C:\Users\stacy\OneDrive\Projects\zebra\zebra_motion\frc2020B.jsonl'
+DATA_FILE = r'C:\Users\stacy\OneDrive\Projects\zebra\zebra_data\2020wasno.jsonl'
 
 def test_zmatch():
     zc = zebra.Competitions(DATA_FILE)
